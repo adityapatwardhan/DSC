@@ -141,6 +141,14 @@ pub struct ExportResult {
     pub actual_state: Vec<Value>,
 }
 
+impl ExportResult {
+    pub fn new(actual_state: Vec<Value>) -> Self {
+        ExportResult {
+            actual_state
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct ResolveResult {

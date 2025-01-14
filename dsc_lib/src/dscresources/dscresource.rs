@@ -317,7 +317,28 @@ impl Invoke for DscResource {
             return Err(DscError::MissingManifest(self.type_name.clone()));
         };
         let resource_manifest = import_manifest(manifest.clone())?;
-        command_resource::invoke_export(&resource_manifest, &self.directory, Some(input))
+
+        // if the resource does not support export, then we need to handle it here
+        if let Err(DscError::Operation(_)) = command_resource::invoke_export(&resource_manifest, &self.directory, Some(input)) {
+            let get_result = self.get(input)?;
+            match get_result {
+                GetResult::Group(results) => {
+                    let mut result_array: Vec<Value> = Vec::new();
+                    for result in results {
+                        result_array.push(serde_json::to_value(result)?);
+                    }
+                    Ok(ExportResult::new(result_array))
+                },
+                GetResult::Resource(response) => {
+                    let mut result_array = Vec::new();
+                    result_array.push(serde_json::to_value(response)?);
+                    Ok(ExportResult::new(result_array))
+                }
+            }
+        }
+        else {
+            command_resource::invoke_export(&resource_manifest, &self.directory, None)
+        }
     }
 
     fn resolve(&self, input: &str) -> Result<ResolveResult, DscError> {
