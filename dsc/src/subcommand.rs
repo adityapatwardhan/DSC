@@ -544,9 +544,10 @@ pub fn resource(subcommand: &ResourceSubCommand) {
             dsc.find_resources(&[resource.to_string()]);
             resource_command::schema(&dsc, resource, output_format.as_ref());
         },
-        ResourceSubCommand::Export { resource, output_format } => {
+        ResourceSubCommand::Export { resource, input, file: path, output_format } => {
             dsc.find_resources(&[resource.to_string()]);
-            resource_command::export(&mut dsc, resource, output_format.as_ref());
+            let parsed_input = get_input(input.as_ref(), path.as_ref());
+            resource_command::export(&mut dsc, resource, parsed_input, output_format.as_ref());
         },
         ResourceSubCommand::Get { resource, input, file: path, all, output_format } => {
             dsc.find_resources(&[resource.to_string()]);

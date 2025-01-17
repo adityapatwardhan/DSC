@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/bundled/resource/manifest.json",
+  "type": "Microsoft.DSC/Export",
+  "version": "0.1.0",
+  "description": "export will be invoked for all resources in the supplied configuration.",
+  "kind": "Group",
+  "get": {
+    "executable": "dsc",
+    "args": [
+      "--trace-format",
+      "pass-through",
+      "config",
+      "--as-group",
+      "test",
+      "--as-get",
+      {
+        "jsonInputArg": "--input",
+        "mandatory": true
+      }
+    ]
+  },
+  "set": {
+    "executable": "dsc",
+    "args": [
+      "--trace-format",
+      "pass-through",
+      "config",
+      "--as-group",
+      "export",
+      {
+        "jsonInputArg": "--input",
+        "mandatory": true
+      }
+    ],
+    "implementsPretest": true,
+    "return": "state"
+  },
+  "test": {
+    "executable": "dsc",
+    "args": [
+      "--trace-format",
+      "pass-through",
+      "config",
+      "--as-group",
+      "test",
+      "--as-config",
+      {
+        "jsonInputArg": "--input",
+        "mandatory": true
+      }
+    ],
+    "return": "state"
+  },
+  "export": {
+    "executable": "dsc",
+    "args": [
+      "--trace-format",
+      "pass-through",
+      "config",
+      "--as-group",
+      "export",
+      {
+        "jsonInputArg": "--input",
+        "mandatory": true
+      }
+    ],
+    "return": "state"
+  },
+  "exitCodes": {
+    "0": "Success",
+    "1": "Invalid argument",
+    "2": "Resource error",
+    "3": "JSON Serialization error",
+    "4": "Invalid input format",
+    "5": "Resource instance failed schema validation",
+    "6": "Command cancelled",
+    "7": "Resource not found"
+  },
+  "validate": {
+    "executable": "dsc",
+    "args": [
+      "--trace-format",
+      "pass-through",
+      "config",
+      "validate",
+      {
+        "jsonInputArg": "--input",
+        "mandatory": true
+      }
+    ]
+  }
+}

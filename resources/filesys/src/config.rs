@@ -15,6 +15,7 @@ pub struct File {
     pub size: Option<u64>,
 
     /// The file hash.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hash: Option<String>,
 
     #[serde(rename = "_exist", skip_serializing_if = "Option::is_none")]

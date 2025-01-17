@@ -1,0 +1,24 @@
+# Example for grouping and groups in groups
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/config/document.json
+metadata:
+  Microsoft.DSC:
+    requiredSecurityContext: Current # this is the default and just used as an example indicating this config works for admins and non-admins
+resources:
+- name: ExportGroup
+  type: Microsoft.DSC/Export
+  properties:
+    $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/config/document.json
+    resources:
+    - name: First
+      type: Microsoft.DSC/File
+      properties:
+        path: 'D:/temp/a.txt'
+- name: ExportGroup2
+  type: Microsoft.DSC/Export
+  properties:
+    $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/config/document.json
+    resources:
+    - name: First
+      type: Microsoft.DSC/File
+      properties:
+        path: 'D:/temp/doesnotexist.txt'

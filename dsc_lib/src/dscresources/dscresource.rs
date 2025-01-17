@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 use crate::{configure::config_doc::ExecutionKind, dscresources::resource_manifest::Kind};
+use crate::dscresources::invoke_result::ResourceSetResponse;
 use dscerror::DscError;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -214,7 +215,26 @@ impl Invoke for DscResource {
                     return Err(DscError::MissingManifest(self.type_name.clone()));
                 };
                 let resource_manifest = import_manifest(manifest.clone())?;
-                command_resource::invoke_set(&resource_manifest, &self.directory, desired, skip_test, execution_type)
+
+                // command_resource::invoke_set(&resource_manifest, &self.directory, desired, skip_test, execution_type)
+
+                // hijack here
+
+                if self.type_name == "Microsoft.DSC/Export" {
+                    let export_result = command_resource::invoke_export(&resource_manifest, &self.directory, Some(desired))?;
+
+                    // convert export result to set result
+                    let set_result = SetResult::Resource(ResourceSetResponse {
+                        before_state: serde_json::Value::Array(export_result.actual_state.clone()),
+                        after_state: serde_json::Value::Array(export_result.actual_state),
+                        changed_properties: None,
+                    });
+
+                    Ok(set_result)
+                }
+                else {
+                    command_resource::invoke_set(&resource_manifest, &self.directory, desired, skip_test, execution_type)
+                }
             },
         }
     }
@@ -337,7 +357,7 @@ impl Invoke for DscResource {
             }
         }
         else {
-            command_resource::invoke_export(&resource_manifest, &self.directory, None)
+            command_resource::invoke_export(&resource_manifest, &self.directory, Some(input))
         }
     }
 
