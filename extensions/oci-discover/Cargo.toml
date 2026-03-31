@@ -1,0 +1,15 @@
+[package]
+name = "oci-discover"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "oci-discover"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "fs"] }
+
+# Alias an OCI client crate as `oci` so the code can use a stable import path.
+oci = { package = "oci-client", version = "0.16.1" }

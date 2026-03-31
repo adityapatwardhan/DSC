@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/dsc/schemas/v3/bundled/extension/manifest.json",
+  "type": "Microsoft.DSC/Discover",
+  "version": "0.1.0",
+  "description": "Discovers OCI artifacts that contain DSC resources, DSC schemas, and DSC configurations.",
+  "discover": {
+    "executable": "oci-discover",
+    "args": [
+      "discover"
+    ]
+  }
+}
